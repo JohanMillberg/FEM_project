@@ -4,10 +4,14 @@ function [x, resnorm, residual] = levmarq(func, x0)
 
 x = x0; 
 r = 100;
+delta_k = 0.01;
+lambda = 1/4;
+mu = 1/4;
+eta = 3/4;
+
 while norm(r) < 0.001
     [r, J] = func(x);
-    mu = 0
-    p = inv(J'*J+mu*eye(length(x)))*J'*r;
+    p = inv(J'*J+lambda*eye(length(x)))*J'*r;
     x = x + p';
 end
 
