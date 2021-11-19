@@ -13,22 +13,39 @@ x = (a:h:b)';
 
 f = @(x) rho*(abs(R-abs(x)) <= r);
 
+A = stiffness(x, alpha);
+B = load_vector(x, rho, R, r);
+xi = A\B;
+[error, eta2] = error_indicator(x, f, alpha, xi, A);
+
 TOL = 1e-3;
-error = 1;
+iii = 1;
 while  error > TOL || length(x) > 1e4
-    A = stiffness(x, alpha);
-    B = load_vector(x, rho, R, r);
-    xi = A\B;
-    [error, eta2] = error_indicator(x, f, alpha, xi, A);
     for i = 1:length(eta2)
         if eta2(i) > lambda*max(eta2)
             x = [x; (x(i+1)+x(i))/2];
         end
     end
     x = sort(x);
+    A = stiffness(x, alpha);
+    B = load_vector(x, rho, R, r);
+    xi = A\B;
+    [error, eta2] = error_indicator(x, f, alpha, xi, A);
 end
-
-A = stiffness(x, alpha);
-B = load_vector(x, rho, R, r);
-xi = A\B;
+subplot(2,2,1)
 plot(x,xi)
+title('FEM-Solution')
+
+subplot(2,2,2)
+plot(x(2:end),[1./diff(x)])
+title('Meshgrid')
+
+subplot(2,2,3)
+M = mass_laplacian(x);
+laplacian = -M\(A*xi);
+plot(x, f(x)+laplacian)
+title('Residuals')
+
+subplot(2,2,4)
+plot(x(1:end-1),eta2)
+title('Error indicator')
