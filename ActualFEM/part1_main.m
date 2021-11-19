@@ -13,22 +13,22 @@ x = (a:h:b)';
 
 f = @(x) rho*(abs(R-abs(x)) <= r);
 
-A = stiffness(x, alpha);
-B = load_vector(x, rho, R, r);
+A = stiffness(x);
+B = load_vector(x, rho, R, r, alpha);
 xi = A\B;
 [error, eta2] = error_indicator(x, f, alpha, xi, A);
 
 TOL = 1e-3;
 
-while  error > TOL || length(x) > 1e4
+while  error > TOL && length(x) < 1e4
     for i = 1:length(eta2)
         if eta2(i) > lambda*max(eta2)
             x = [x; (x(i+1)+x(i))/2];
         end
     end
     x = sort(x);
-    A = stiffness(x, alpha);
-    B = load_vector(x, rho, R, r);
+    A = stiffness(x);
+    B = load_vector(x, rho, R, r, alpha);
     xi = A\B;
     [error, eta2] = error_indicator(x, f, alpha, xi, A);
 end
