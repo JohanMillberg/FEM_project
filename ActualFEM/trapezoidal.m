@@ -1,6 +1,6 @@
 function result = trapezoidal(x, func)
 
-f = func(x);
+f = func(x).^2;
 
 ba = x(end)-x(1);
 N = length(x) - 1;
