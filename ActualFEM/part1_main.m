@@ -19,7 +19,7 @@ xi = A\B;
 [error, eta2] = error_indicator(x, f, alpha, xi, A);
 
 TOL = 1e-3;
-iii = 1;
+
 while  error > TOL || length(x) > 1e4
     for i = 1:length(eta2)
         if eta2(i) > lambda*max(eta2)
@@ -38,14 +38,14 @@ title('FEM-Solution')
 
 subplot(2,2,2)
 plot(x(2:end),[1./diff(x)])
-title('Meshgrid')
+title('Mesh distribution')
 
 subplot(2,2,3)
 M = mass_laplacian(x);
 laplacian = -M\(A*xi);
-plot(x, f(x)+laplacian)
+plot(x, f(x)+alpha*laplacian)
 title('Residuals')
 
 subplot(2,2,4)
 plot(x(1:end-1),eta2)
-title('Error indicator')
+title('\eta(u_{h})')
