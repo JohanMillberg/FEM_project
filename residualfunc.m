@@ -1,4 +1,4 @@
-function [r,rgrad] = residualfunc(x)
+function [r,rgrad,f] = residualfunc(x)
 %RESIDUALFUNC Summary of this function goes here
 %   Detailed explanation goes here
 

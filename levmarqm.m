@@ -9,7 +9,6 @@ nu = 1.5;
 
 while norm(r) > 0.4
     [r, J] = func(x);
-    disp(J'*J)
     p1 = (J'*J+lambda*eye(length(x)))\(J'*r);
     p2 = (J'*J+lambda/nu*eye(length(x)))\(J'*r);
     [r1, J1] = func(x+p1);
@@ -29,7 +28,6 @@ while norm(r) > 0.4
             lambda = lambda*nu;
         end
     end
-    disp(lambda)
 end
 
 [r, J] = func(x);
