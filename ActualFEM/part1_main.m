@@ -15,7 +15,7 @@ f = @(x) rho*(abs(R-abs(x)) <= r);
 
 TOL = 1e-3;
 error = 1;
-while  error > TOL || N > 1e4
+while  error > TOL || length(x) > 1e4
     A = stiffness(x, alpha);
     B = load_vector(x, rho, R, r);
     xi = A\B;
