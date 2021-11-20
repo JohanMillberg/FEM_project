@@ -1,14 +1,17 @@
 function [x, resnorm, residual] = levmarqm(func, x0)
-%LEVMARQ Summary of this function goes here
-%   Detailed explanation goes here
-
+%Function used to solve non linear least square curve fitting problems
+%func: The residual function used to calculate the residuals, gradient of
+%the residuals, and the function f
+%x0: the starting guess
 x = x0;
 r = 100;
 lambda = 10;
 nu = 1.5;
 
+
 while norm(r) > 0.4
     [r, J] = func(x);
+    %Take two LM steps, one with damping lambda and one with lambda/nu
     p1 = (J'*J+lambda*eye(length(x)))\(J'*r);
     p2 = (J'*J+lambda/nu*eye(length(x)))\(J'*r);
     [r1, J1] = func(x+p1);

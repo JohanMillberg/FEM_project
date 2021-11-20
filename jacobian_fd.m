@@ -1,4 +1,8 @@
 function J = jacobian_fd(f, x, t, h)
+% Function used to numerically calculate the Jacobian using finite
+% difference
+%f: function head
+%x: x vector, t: t vector, h: step length
 
 m = length(t);
 n = length(x);

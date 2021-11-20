@@ -1,7 +1,9 @@
+% Script used to demonstrate the Levenberg-Marquardt algorithm
+
 fun = @(b)residualfunc(b);
 x0 = [1;1];
 
-[x_sol, rn, r] = levmarqm(fun, x0)
+[x_sol, rn, r] = levmarqm(fun, x0);
 
 
 t = [0.5, 1, 1.5, 2, 2.5, 3.0, 3.5, 4.0]';
