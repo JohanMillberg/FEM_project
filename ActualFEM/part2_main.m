@@ -11,7 +11,7 @@ for k = 1:length(mesh_sizes)
     hmax = mesh_sizes(k);
     [p, e, t] = initmesh(geometry, 'hmax', hmax);
     I = eye(length(p));
-    [A,b] = assemble(p,e,t);
+    [A,b] = assemble1(p,e,t);
 
     x = p(1, e(1,:));
     y = p(2, e(1,:));

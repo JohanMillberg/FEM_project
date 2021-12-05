@@ -1,7 +1,5 @@
-function [A,b_vec] = assemble(p,e,t)
+function f = heat_source(p,e,t,beta,gamma,M,xi)
 
-N = size(p,2);
-A = sparse(N,N);
 b_vec = zeros(N,1);
 
 for K = 1:size(t,2)
@@ -10,11 +8,8 @@ for K = 1:size(t,2)
     y = p(2,nodes);
     [area_K, b, c] = hat_gradients(x,y);
     xc = mean(x); yc = mean(y);
-    AK = (b*b' + c*c') * area_K;
-   
-    bK = source_term(xc,yc)*area_K / 3;
-    A(nodes,nodes) = A(nodes, nodes) + AK;
+    bK = source_term2(xc,yc)*area_K / 3;
     b_vec(nodes) = b_vec(nodes) + bK;
 end
-    
-   
+
+f = beta .* M * (xi-gamma.*xi.^2);
