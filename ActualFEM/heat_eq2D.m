@@ -1,3 +1,5 @@
+%Sets all parameters
+
 rho = 10;
 alpha = 0.01;
 R = 0.5;
@@ -5,12 +7,12 @@ r = 0.3;
 T = 30;
 time = 0:0.01:T;
 mesh_sizes = [1/5, 1/20];
-beta = 1;
-gamma = 0.2;
+beta = 0.2;
+gamma = 0.5;
 
 geometry = @circleg;
 
-
+%Calculates the solution for both mesh sizes
 for k = 1:length(mesh_sizes)
     hmax = mesh_sizes(k);
     [p, e, t] = initmesh(geometry, 'hmax', hmax);
@@ -35,8 +37,9 @@ for k = 1:length(mesh_sizes)
     xi = zeros(length(A),length(time));
     xi(:,1) = xi_0;
     b_vec = zeros(length(A),length(time));
+    
+    %Uses Crank-Nicholson to make the time discretisation
     for i = 2:length(time)
-        
         b = heat_source(beta,gamma,M,xi(:,i-1));
         b(e(1,:)) = 0;
         kn = time(i)- time(i-1);

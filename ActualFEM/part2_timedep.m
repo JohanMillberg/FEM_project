@@ -1,3 +1,4 @@
+%Sets all parameters
 rho = 10;
 alpha = 0.01;
 R = 0.5;
@@ -8,6 +9,7 @@ mesh_sizes = [1/5, 1/20];
 
 geometry = @circleg;
 
+%Calculates the solution for both mesh sizes
 for k = 1:length(mesh_sizes)
     hmax = mesh_sizes(k);
     [p, e, t] = initmesh(geometry, 'hmax', hmax);
@@ -30,7 +32,7 @@ for k = 1:length(mesh_sizes)
             xi_0(i,1) = rho;
         end
     end
-    
+    %Uses Crank-Nicholson to make the time discretisation
     xi = zeros(length(b),length(time));
     xi(:,1) = xi_0;
     for i = 2:length(time)
@@ -40,6 +42,8 @@ for k = 1:length(mesh_sizes)
       
     end
 end
+
+%Calculates and plots the mass loss
 mass_loss = zeros(1,length(time));
 for i = 1:length(time)
     g = @(index) xi(index,1) - xi(index,i);

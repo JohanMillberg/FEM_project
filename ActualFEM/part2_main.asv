@@ -7,7 +7,7 @@ energy_norms = zeros(size(mesh_sizes));
 convergence_rate = zeros(1,length(mesh_sizes)-1);
 old_error = 0;
 
-% Calculates and plots the solution using the available mesh sizes
+
 for k = 1:length(mesh_sizes)
     hmax = mesh_sizes(k);
     [p, e, t] = initmesh(geometry, 'hmax', hmax);
@@ -41,19 +41,14 @@ for k = 1:length(mesh_sizes)
     pdemesh(p,e,t,xi)
 
 end
-
-%Calculates h_max^gamma
-hmax_gamma = zeros(1,length(mesh_sizes) - 1);
-for j = 1:length(mesh_sizes)
-    hmax_gamma(j) = mesh_sizes(j)^convergence_rate(end);
+hmax_gamma = zeros(1,length(mesh_size)
+for j = 2:length(mesh_size)
+    
 end
 
-figure()
-hold on
-loglog(mesh_sizes,hmax_gamma, ...
-    mesh_sizes,energy_norms)
-legend('h_{max}^{\gamma}','Energy norm')
-xlabel('h_{max}')
-hold off
+figure(3)
+loglog(mesh_sizes(2:end),, ...
+    mesh_sizes(2:end),energy_norms(2:end))
+legend('\gamma','Energy norm')
 
 
