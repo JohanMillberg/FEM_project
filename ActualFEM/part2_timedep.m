@@ -9,6 +9,8 @@ mesh_sizes = [1/5, 1/20];
 
 geometry = @circleg;
 
+mass_loss = zeros(2,length(time));
+
 %Calculates the solution for both mesh sizes
 for k = 1:length(mesh_sizes)
     hmax = mesh_sizes(k);
@@ -18,7 +20,6 @@ for k = 1:length(mesh_sizes)
     A = alpha.*A;
     x = p(1, e(1,:));
     y = p(2, e(1,:));
-    iii = 2;
     
     A(e(1,:),:) = I(e(1,:),:);
     b(e(1,:)) = 0;
@@ -41,20 +42,21 @@ for k = 1:length(mesh_sizes)
         xi(:,i-1)+b);
       
     end
+    %Calculates the mass loss
+    for i = 1:length(time)
+    g = @(index) xi(index,1) - xi(index,i);
+    mass_loss(k,i) = integration_2D(g,p,t);
+    end
 end
 
-%Calculates and plots the mass loss
-mass_loss = zeros(1,length(time));
-for i = 1:length(time)
-    g = @(index) xi(index,1) - xi(index,i);
-    mass_loss(i) = integration_2D(g,p,t);
-end
+%Plots the mass loss
 
 figure(1)
 hold on
 xlabel('t')
 ylabel('Mass loss')
 title('Mass loss over time')
-plot(time,mass_loss)
+plot(time,mass_loss(1,:),time,mass_loss(2,:))
+legend('h_{max} = 1/5', 'h_{max} = 1/20')
 hold off
 

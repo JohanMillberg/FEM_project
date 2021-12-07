@@ -5,12 +5,14 @@ alpha = 0.01;
 R = 0.5;
 r = 0.3;
 T = 30;
-time = 0:0.01:T;
+time = 0:0.1:T;
 mesh_sizes = [1/5, 1/20];
-beta = 0.2;
-gamma = 0.5;
+beta = 1;
+gamma = 0.2;
 
 geometry = @circleg;
+
+mass_loss = zeros(2,length(time));
 
 %Calculates the solution for both mesh sizes
 for k = 1:length(mesh_sizes)
@@ -36,6 +38,7 @@ for k = 1:length(mesh_sizes)
     
     xi = zeros(length(A),length(time));
     xi(:,1) = xi_0;
+    mass_loss(k,1) = 0;
     b_vec = zeros(length(A),length(time));
     
     %Uses Crank-Nicholson to make the time discretisation
@@ -46,8 +49,24 @@ for k = 1:length(mesh_sizes)
         xi(:,i) = (1/kn.*M+(1/2).*A)\((1/kn.*M-(1/2) .* A)* ...
         xi(:,i-1)+b);
         b_vec(:,i) = b;
+        
+        %Calculates the mass loss
+        g = @(index) xi(index,1) - xi(index,i);
+        mass_loss(k,i) = integration_2D(g,p,t);
+        
     end
+   
+    
 end
+
+figure(1)
+hold on
+xlabel('t')
+ylabel('Mass loss')
+title('Mass loss over time, \gamma = 0.2')
+plot(time,mass_loss(1,:),time,mass_loss(2,:))
+legend('h_{max} = 1/5', 'h_{max} = 1/20')
+hold off
 
 %for i = 1:length(time)
 %    pdemesh(p,e,t,xi(:,i))
