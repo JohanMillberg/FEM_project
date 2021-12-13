@@ -1,0 +1,77 @@
+%Sets all parameters
+rho = 2;
+alpha_1 = 0.01;
+alpha_2 = 0.005;
+cf = 0.024;
+ck = 0.055;
+R = 0.5;
+r = 0.3;
+T = 20;
+time = 0:0.1:T;
+mesh_sizes = [1/5, 1/20];
+
+geometry = @circleg;
+
+mass_loss = zeros(2,length(time));
+
+%Calculates the solution for both mesh sizes
+for k = 1:length(mesh_sizes)
+    hmax = mesh_sizes(k);
+    [p, e, t] = initmesh(geometry, 'hmax', hmax);
+    I = eye(length(p));
+    [A, M] = assemble_heat(p,e,t);
+    x = p(1, e(1,:));
+    y = p(2, e(1,:));
+    
+    A(e(1,:),:) = I(e(1,:),:);
+
+    xi_u0 = zeros(length(A), 1);
+    xi_v0 = zeros(length(A), 1);
+    
+    for i = 1:length(p)
+        x = p(1,i);
+        y = p(2,i);
+        if (x^2 + y^2)^(1/2) >= r && (x^2 + y^2)^(1/2) < R
+            xi_u0(i,1) = rho*1/2*rand(1);
+            xi_v0(i,1) = rho*(1 + 1/2*rand(1));
+        end
+    end
+    %Uses Crank-Nicholson to make the time discretisation
+    xi_u = zeros(length(A),length(time));
+    xi_u(:,1) = xi_u0;
+    xi_v = zeros(length(A),length(time));
+    xi_v(:,1) = xi_v0;
+    
+    cf_vec = cf*ones(length(A),1);
+    b_s = zeros(length(A),length(time));
+    for i = 2:length(time)
+        b = source_c(M,xi_u(:,i-1),xi_v(:,i-1));
+        b(e(1,:)) = 0;
+        b(:
+        kn = time(i)- time(i-1);
+        
+        xi_u(:,i) = ((1/kn+cf/2)*M+alpha_1/2*A) \ ...
+            (cf_vec - ((cf/2 - 1/kn)*M + alpha_1/2*A)*xi_u(:,i-1)-b);
+        
+        xi_v(:,i) = (((cf+ck)/2+1/kn)*M + alpha_2/2 * A) \ ...
+            (b - (alpha_2/2 * A + ((cf+ck)/2 - 1/kn)*M)*xi_v(:,i-1));
+      
+    end
+    %Calculates the mass loss
+    %for i = 1:length(time)
+    %g = @(index) xi(index,1) - xi(index,i);
+    %mass_loss(k,i) = integration_2D(g,p,t);
+    %end
+end
+
+%Plots the mass loss
+
+% figure(1)
+% hold on
+% xlabel('t')
+% ylabel('Mass loss')
+% title('Mass loss over time')
+% plot(time,mass_loss(1,:),time,mass_loss(2,:))
+% legend('h_{max} = 1/5', 'h_{max} = 1/20')
+% hold off
+
